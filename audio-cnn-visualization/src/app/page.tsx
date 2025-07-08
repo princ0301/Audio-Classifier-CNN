@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+// import Link from "next/link";
 import { useState } from "react";
 import ColorScale from "~/components/ColorScale";
 import FeatureMap from "~/components/FeatureMap";
@@ -20,9 +20,7 @@ interface LayerData {
   values: number[][];
 }
 
-interface VisualizationData {
-  [layerName: string]: LayerData;
-}
+type VisualizationData = Record<string, LayerData>;
 
 interface WaveformData {
   values: number[];
@@ -91,7 +89,7 @@ const ESC50_EMOJI_MAP: Record<string, string> = {
 };
 
 const getEmojiForClass = (className: string): string => {
-  return ESC50_EMOJI_MAP[className] || "🔈";
+  return ESC50_EMOJI_MAP[className] ?? "🔈";
 };
 
 function splitLayers(visualization: VisualizationData) {
@@ -105,7 +103,7 @@ function splitLayers(visualization: VisualizationData) {
       const [parent] = name.split(".");
       if (parent === undefined) continue;
 
-      if (!internals[parent]) internals[parent] = [];
+      internals[parent] ??= [];
       internals[parent].push([name, data]);
     }
   }
@@ -152,7 +150,7 @@ export default function HomePage() {
           throw new Error(`API error ${response.statusText}`);
         }
 
-        const data: ApiResponse = await response.json();
+        const data = (await response.json()) as ApiResponse;
         setVizData(data);
       } catch (err) {
         setError(
