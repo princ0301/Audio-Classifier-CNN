@@ -8,3 +8,5 @@ fastapi
 librosa
 pydantic
 soundfile
+modal
+pydantic
